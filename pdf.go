@@ -19,7 +19,7 @@ func ConvertPDF(r io.Reader) (string, map[string]string, error) {
 	// Meta data
 	mc := make(chan map[string]string, 1)
 	go func() {
-		metaStr, err := exec.Command("pdfinfo", "-isodates", f.Name()).Output()
+		metaStr, err := exec.Command("pdfinfo", "-rawdates", f.Name()).Output()
 		if err != nil {
 			// TODO: Remove this.
 			log.Println("pdfinfo:", err)
@@ -32,7 +32,6 @@ func ConvertPDF(r io.Reader) (string, map[string]string, error) {
 				info[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
 			}
 		}
-
 		mc <- info
 	}()
 

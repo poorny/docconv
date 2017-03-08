@@ -25,13 +25,13 @@ func TestConvertPDF(t *testing.T) {
 		"Pages":          "1",
 		"Author":         "Yukon Department of Education",
 		"Creator":        "Acrobat PDFMaker 7.0.7 for Word",
-		"ModDate":        "2008-06-04T15:47:36-07",
 		"PDF version":    "1.6",
-		"CreationDate":   "2008-06-04T15:44:00-07",
 		"UserProperties": "no",
 		"Encrypted":      "yes (print:yes copy:no change:no addNotes:no algorithm:RC4)",
 		"Page size":      "612 x 792 pts (letter)",
 		"Optimized":      "yes",
+		"CreationDate":   "D:20080604154400-07'00'",
+		"ModDate":        "D:20080604154736-07'00'",
 	}
 	if !reflect.DeepEqual(meta, want) {
 		t.Errorf("ConvertPDF() meta = %#v; not %#v", meta, want)
