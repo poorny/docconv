@@ -11,6 +11,64 @@ import (
 	"github.com/xuri/excelize"
 )
 
+// convertWithTealegXlsx used tealeg/xlsx to convert XLSX to CSV
+func convertWithTealegXlsx(f *LocalFile) (body string, err error) {
+	fileStat, err := f.Stat()
+	if err != nil {
+		err = fmt.Errorf("error convert with 'tealeg/xlsx' on getting file stats: %v", err)
+		return
+	}
+	xlsFile, err := xlsx.OpenReaderAt(f, fileStat.Size())
+	if err != nil {
+		err = fmt.Errorf("error convert with 'tealeg/xlsx' on xlsx parsing: %v", err)
+		return
+	}
+	for _, sheet := range xlsFile.Sheets {
+		for rowIndex, row := range sheet.Rows {
+			for cellIndex, cell := range row.Cells {
+				text := cell.String()
+				body += text
+				if cellIndex < len(row.Cells)-1 {
+					body += ","
+				}
+			}
+			if rowIndex < len(sheet.Rows)-1 {
+				body += "\n"
+			}
+		}
+	}
+	return
+}
+
+// convertWithExcelize used excelize to convert XLSX to CSV
+func convertWithExcelize(f *LocalFile) (body string, err error) {
+	xlsFile, err := excelize.OpenFile(f.Name())
+	if err != nil {
+		err = fmt.Errorf("error convert with 'excelize' on xlsx parsing: %v", err)
+		return
+	}
+	for sheetIndex, _ := range xlsFile.GetSheetMap() {
+		rows := xlsFile.GetRows("sheet" + strconv.Itoa(sheetIndex))
+		if len(rows) == 0 {
+			err = fmt.Errorf("error on convert with excelize")
+			return
+		}
+		for rowIndex, row := range rows {
+			for cellIndex, colCell := range row {
+				text := colCell
+				body += text
+				if cellIndex < len(row)-1 {
+					body += ","
+				}
+			}
+			if rowIndex < len(rows)-1 {
+				body += "\n"
+			}
+		}
+	}
+	return
+}
+
 // ConvertXLSX Excel Spreadsheet
 func ConvertXLSX(r io.Reader) (string, map[string]string, error) {
 	f, err := NewLocalFile(r, "/tmp", "sajari-convert-")
@@ -24,31 +82,16 @@ func ConvertXLSX(r io.Reader) (string, map[string]string, error) {
 		return "", nil, fmt.Errorf("error on getting file stats: %v", err)
 	}
 
-	xlsFile, err := excelize.OpenFile(f.Name())
-	if err != nil {
-		fmt.Println(".... > ", err)
-		return "", nil, fmt.Errorf("error on xlsx parsing: %v", err)
-	}
-
 	// Meta data
 	meta := make(map[string]string)
 	meta["ModifiedDate"] = fmt.Sprintf("%d", fileStat.ModTime().Unix())
 
-	// Document body
-	var body string
-	for sheetIndex, _ := range xlsFile.GetSheetMap() {
-		rows := xlsFile.GetRows("sheet" + strconv.Itoa(sheetIndex))
-		for rowIndex, row := range rows {
-			for cellIndex, colCell := range row {
-				text := colCell
-				body += text
-				if cellIndex < len(row)-1 {
-					body += ","
-				}
-			}
-			if rowIndex < len(rows)-1 {
-				body += "\n"
-			}
+	body, err := convertWithExcelize(f)
+	if err != nil {
+		// TODO: Generates error in some types of Excel, we need to contribute to xuri/excelize
+		body, err := convertWithTealegXlsx(f)
+		if err != nil {
+			return body, meta, err
 		}
 	}
 
