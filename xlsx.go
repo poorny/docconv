@@ -86,10 +86,11 @@ func ConvertXLSX(r io.Reader) (string, map[string]string, error) {
 	meta := make(map[string]string)
 	meta["ModifiedDate"] = fmt.Sprintf("%d", fileStat.ModTime().Unix())
 
-	body, err := convertWithExcelize(f)
+	var body string
+	body, err = convertWithExcelize(f)
 	if err != nil {
 		// TODO: Generates error in some types of Excel, we need to contribute to xuri/excelize
-		body, err := convertWithTealegXlsx(f)
+		body, err = convertWithTealegXlsx(f)
 		if err != nil {
 			return body, meta, err
 		}
