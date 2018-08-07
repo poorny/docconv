@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"io"
 
-	"github.com/advancedlogic/GoOse"
+	"github.com/nuveo/GoOse"
 )
 
 // Convert URL
