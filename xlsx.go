@@ -47,8 +47,12 @@ func convertWithExcelize(f *LocalFile) (body string, err error) {
 		err = fmt.Errorf("error convert with 'excelize' on xlsx parsing: %v", err)
 		return
 	}
-	for sheetIndex, _ := range xlsFile.GetSheetMap() {
-		rows := xlsFile.GetRows("sheet" + strconv.Itoa(sheetIndex))
+	for sheetIndex := range xlsFile.GetSheetMap() {
+		rows, newErr := xlsFile.GetRows("sheet" + strconv.Itoa(sheetIndex))
+		if newErr != nil {
+			err = fmt.Errorf("error on getting rows from sheet: %v", err)
+			return
+		}
 		if len(rows) == 0 {
 			err = fmt.Errorf("error on convert with excelize")
 			return
