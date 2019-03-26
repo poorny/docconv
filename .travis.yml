@@ -1,3 +1,4 @@
+dist: xenial
 language: go
 os:
   - linux
@@ -12,4 +13,5 @@ before_install:
   - sudo apt-get install -y poppler-utils libleptonica-dev libtesseract-dev tesseract-ocr
   - go get -u -t -v ./...
 script:
+  - pdftotext -v
   - go test -v ./...
