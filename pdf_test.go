@@ -38,7 +38,6 @@ func TestConvertPDF(t *testing.T) {
 		"JavaScript":     "no",
 		"Pages":          "1",
 	}
-
 	want_v018 := map[string]string{
 		"Creator":      "Acrobat PDFMaker 7.0.7 for Word",
 		"Producer":     "Acrobat Distiller 7.0.5 (Windows)",
@@ -58,7 +57,6 @@ func TestConvertPDF(t *testing.T) {
 		"ArtBox":    "0.00     0.00   612.00   792.00",
 		"Optimized": "yes",
 	}
-	
 	wantTravis := map[string]string{
 		"Author":         "Yukon Department of Education",
 		"Encrypted":      "yes (print:yes copy:no change:no addNotes:no algorithm:RC4)",
@@ -84,7 +82,6 @@ func TestConvertPDF(t *testing.T) {
 		"JavaScript":     "no",
 		"Pages":          "1",
 	}
-	
 	if !reflect.DeepEqual(meta, want_v018) {
 		if !reflect.DeepEqual(meta, wantTravis) {
 			if !reflect.DeepEqual(meta, want) {
