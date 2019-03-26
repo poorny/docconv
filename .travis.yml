@@ -10,5 +10,6 @@ matrix:
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y poppler-utils libleptonica-dev libtesseract-dev tesseract-ocr
+  - go get -u -t -v ./...
 script:
-  - go test
+  - go test -v ./...
