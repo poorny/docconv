@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"strconv"
 
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/tealeg/xlsx"
-	"github.com/xuri/excelize"
 )
 
 // convertWithTealegXlsx used tealeg/xlsx to convert XLSX to CSV
@@ -93,7 +93,7 @@ func ConvertXLSX(r io.Reader) (string, map[string]string, error) {
 	var body string
 	body, err = convertWithExcelize(f)
 	if err != nil {
-		// TODO: Generates error in some types of Excel, we need to contribute to xuri/excelize
+		// TODO: Generates error in some types of Excel, we need to contribute to 360EntSecGroup-Skylar/excelize
 		body, err = convertWithTealegXlsx(f)
 		if err != nil {
 			return body, meta, err
