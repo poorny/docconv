@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"strconv"
 
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/qax-os/excelize"
 	"github.com/tealeg/xlsx"
 )
 
